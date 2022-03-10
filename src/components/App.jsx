@@ -45,13 +45,13 @@ export default function App() {
         .catch(error => console.error(error));
     
 
-    if (listaProvincias.getLength() == 0)
+    if (listaProvincias.getLength() === 0)
         obtenerProvincias();
 
-    if (listaMunicipios.getLength() == 0)
+    if (listaMunicipios.getLength() === 0)
         obtenerMunicipios();
 
-    if (listaTipoCarburantes.getLength() == 0)
+    if (listaTipoCarburantes.getLength() === 0)
         obtenerTipoCarburantes();
 
     return (
