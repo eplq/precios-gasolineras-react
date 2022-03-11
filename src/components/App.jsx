@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
+
 import useList from "../hooks/useList";
 import { capitalize } from "../utils";
+import Markers from './Markers';
 
 export default function App() {
 
@@ -18,6 +20,7 @@ export default function App() {
     const lastProvincia = useRef('0');
 
     const [idMunicipio, setIdMunicipio] = useState('280'); // Abla
+
 
     const obtenerTipoCarburantes = () => {
         if (!tipoCarburantesFetched.current) {
@@ -113,11 +116,12 @@ export default function App() {
                 </div>
             </div>
             <div className="h-full flex-1">
-                <MapContainer center={[1, 1]} zoom={13} className="z-10 h-full">
+                <MapContainer center={[40.4169, -3.7035]} zoom={8} className="z-10 h-full">
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
+                    <Markers municipio={idMunicipio}/>
                 </MapContainer>
             </div>
         </main>
