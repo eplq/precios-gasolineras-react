@@ -1,6 +1,6 @@
-import { Marker, Polygon, Popup, useMap } from "react-leaflet";
+import { Marker, Popup, useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
-import { Icon } from "leaflet";
+import { Icon, polygon as makePolygon } from "leaflet";
 import markerImg from 'leaflet/dist/images/marker-icon.png';
 
 import useList from "../hooks/useList";
@@ -45,19 +45,21 @@ export default function Markers(props) {
             );
         });
     
-    let polygon = <Polygon color='red' positions={gasolinerasList
+    let polygon = makePolygon(gasolinerasList
         .getList()
-        .map(element => [element['Latitud'].replace(",", "."), element['Longitud (WGS84)'].replace(",", ".")])
-        .sort((a, b) => {
-            return -.5 + ((-1)**(a[0] < b[0]) + (-1)**(a[1] < b[2]))
-        })
-        } />
-
-    // console.log(map.setView([0, 0], 5));
-    return (
-        <>
-            {markers}
-            {polygon}
-        </>
+        .map(element => [element['Latitud'].replace(",", "."), element['Longitud (WGS84)'].replace(",", ".")]),
+        {
+            color: 'transparent',
+            interactive: false
+        }
     );
+
+    if (gasolinerasList.getLength() > 0) {
+        let layer = polygon.addTo(map);
+        console.log(layer);
+        let center = layer.getCenter();
+        map.setView(center, 11);
+    }
+
+    return markers;
 }

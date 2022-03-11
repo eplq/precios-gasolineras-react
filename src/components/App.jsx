@@ -16,7 +16,7 @@ export default function App() {
 
     const [idTipoCarburante, setIdTipoCarburante] = useState('1'); // Gasolina 95 E5
 
-    const [idProvincia, setIdProvincia] = useState('04'); // Albacete
+    const [idProvincia, setIdProvincia] = useState('02'); // Albacete
     const lastProvincia = useRef('0');
 
     const [idMunicipio, setIdMunicipio] = useState('280'); // Abla
