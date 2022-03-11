@@ -1,11 +1,11 @@
-import { Marker, Popup, useMap } from "react-leaflet";
+import { Marker, Polygon, Popup, useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
-import useList from "../hooks/useList";
 import { Icon } from "leaflet";
+import markerImg from 'leaflet/dist/images/marker-icon.png';
 
-import markerImg from '../img/marker.png';
-
-const icon = new Icon({ iconUrl: markerImg});
+import useList from "../hooks/useList";
+//                                              x axis middle, y axis bottom
+const icon = new Icon({ iconUrl: markerImg, iconAnchor: [25/2, 41]});
 
 export default function Markers(props) {
 
@@ -34,18 +34,30 @@ export default function Markers(props) {
         .getList()
         .map((element, index) => {
             let position = [element['Latitud'].replace(",", "."), element['Longitud (WGS84)'].replace(",", ".")];
+            // 25x41
             return (
                 <Marker key={index} position={position} icon={icon}>
-                    <Popup children={
-                        <>
-                            <p>{element['Rótulo']}</p>
-                            <p>{element['PrecioProducto']} &euro;</p>
-                        </>
-                    } />
+                    <Popup>
+                        <p>{element['Rótulo']}</p>
+                        <p>{element['PrecioProducto']} &euro;</p>
+                    </Popup>
                 </Marker>
             );
         });
+    
+    let polygon = <Polygon color='red' positions={gasolinerasList
+        .getList()
+        .map(element => [element['Latitud'].replace(",", "."), element['Longitud (WGS84)'].replace(",", ".")])
+        .sort((a, b) => {
+            return -.5 + ((-1)**(a[0] < b[0]) + (-1)**(a[1] < b[2]))
+        })
+        } />
 
     // console.log(map.setView([0, 0], 5));
-    return markers;
+    return (
+        <>
+            {markers}
+            {polygon}
+        </>
+    );
 }
