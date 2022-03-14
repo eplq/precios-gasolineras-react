@@ -1,6 +1,8 @@
 import React from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
-import { obtenerProvincias, obtenerTipoCarburantes } from "../api";
+
+import OptionsList from "./OptionsList";
+import { getMunicipios, getProvincias, getTipoCarburantes } from "../api";
 
 import { capitalize } from "../utils";
 
@@ -20,22 +22,47 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        this.getProvincias();
-        this.getTipoCarburantes();
-    }
 
-    getProvincias() {
-        obtenerProvincias(json => {
+        getProvincias(json => {
             this.setState({
                 listaProvincias: json
             });
         });
-    }
 
-    getTipoCarburantes() {
-        obtenerTipoCarburantes(json => {
+        getTipoCarburantes(json => {
             this.setState({
                 listaTipoCarburantes: json
+            });
+        });
+
+        getMunicipios(this.state.idProvincia, json => {
+            this.setState({
+                listaMunicipios: json
+            });
+        });
+    }
+
+    getGasolineras() {
+
+    }
+
+    onTipoCarburanteChanged(ev) {
+        this.setState({idTipoCarburante: ev.target.value});
+        this.getGasolineras();
+    }
+
+    onMunicipioChanged(ev) {
+        this.setState({idMunicipio: ev.target.value});
+        this.getGasolineras();
+    }
+
+    onProvinciaChanged(ev) {
+        let idProvincia = ev.target.value;
+
+        getMunicipios(idProvincia, json => {
+            this.setState({
+                idProvincia: idProvincia,
+                listaMunicipios: json
             });
         });
     }
@@ -48,28 +75,18 @@ export default class App extends React.Component {
                         <h1 className="text-3xl text-center mb-2">Precios de los hidro<wbr />carburos</h1>
                         <p className="mb-4">Seleccione un municipio</p>
                     
-
                         <div className="w-full">
                             <label htmlFor="selectProvincia">Provincia</label>
-                            <select className="w-full" name="Provincia" id="selectProvincia">
-                                {
-                                    this.state.listaProvincias
-                                    .map(element => <option key={element.IDPovincia} value={element.IDPovincia}>{capitalize(element.Provincia.toLowerCase())}</option>)
-                                }
+                            <select className="w-full" name="Provincia" id="selectProvincia" onChange={ev => this.onProvinciaChanged(ev)}>
+                                <OptionsList list={this.state.listaProvincias} idField="IDProvincia" valueField="Provincia" />
                             </select>
                             <label htmlFor="selectMunicipio">Municipio</label>
-                            <select className="w-full" name="Municipio" id="selectMunicipio">
-                                {
-                                    this.state.listaMunicipios
-                                    .map(element => <option key={element.IDMunicipio} value={element.IDMunicipio}>{capitalize(element.Municipio.toLowerCase())}</option>)
-                                }
+                            <select className="w-full" name="Municipio" id="selectMunicipio" onChange={ev => this.onMunicipioChanged(ev)}>
+                                <OptionsList list={this.state.listaMunicipios} idField="IDMunicipio" valueField="Municipio" />
                             </select>
                             <label htmlFor="selectTipoCarburante">Tipo de carburante</label>
-                            <select className="w-full" name="TipoCarburante" id="selectTipoCarburante">
-                                {
-                                    this.state.listaTipoCarburantes
-                                    .map(element => <option key={element.IDProducto} value={element.IDProducto}>{element.NombreProducto}</option>)
-                                }
+                            <select className="w-full" name="TipoCarburante" id="selectTipoCarburante" onChange={ev => this.onTipoCarburanteChanged(ev)}>
+                                <OptionsList list={this.state.listaTipoCarburantes} idField="IDProducto" valueField="NombreProducto" />
                             </select>
                         </div>
                     </div>
