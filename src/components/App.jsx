@@ -1,8 +1,14 @@
 import React from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
+import { obtenerProvincias, obtenerTipoCarburantes } from "../api";
+
+import { capitalize } from "../utils";
 
 export default class App extends React.Component {
 
     constructor() {
+        super();
+
         this.state = {
             listaTipoCarburantes: [],
             listaProvincias: [],
@@ -11,6 +17,27 @@ export default class App extends React.Component {
             idProvincia: '02', // Albacete
             idMunicipio: '280' // Abla
         };
+    }
+
+    componentDidMount() {
+        this.getProvincias();
+        this.getTipoCarburantes();
+    }
+
+    getProvincias() {
+        obtenerProvincias(json => {
+            this.setState({
+                listaProvincias: json
+            });
+        });
+    }
+
+    getTipoCarburantes() {
+        obtenerTipoCarburantes(json => {
+            this.setState({
+                listaTipoCarburantes: json
+            });
+        });
     }
 
     render() {
@@ -24,26 +51,23 @@ export default class App extends React.Component {
 
                         <div className="w-full">
                             <label htmlFor="selectProvincia">Provincia</label>
-                            <select className="w-full" name="Provincia" id="selectProvincia" onChange={ev => setIdProvincia(ev.target.value)}>
+                            <select className="w-full" name="Provincia" id="selectProvincia">
                                 {
-                                    listaProvincias
-                                    .getList()
+                                    this.state.listaProvincias
                                     .map(element => <option key={element.IDPovincia} value={element.IDPovincia}>{capitalize(element.Provincia.toLowerCase())}</option>)
                                 }
                             </select>
                             <label htmlFor="selectMunicipio">Municipio</label>
-                            <select className="w-full" name="Municipio" id="selectMunicipio" onChange={ev => setIdMunicipio(ev.target.value)}>
+                            <select className="w-full" name="Municipio" id="selectMunicipio">
                                 {
-                                    listaMunicipios
-                                    .getList()
+                                    this.state.listaMunicipios
                                     .map(element => <option key={element.IDMunicipio} value={element.IDMunicipio}>{capitalize(element.Municipio.toLowerCase())}</option>)
                                 }
                             </select>
                             <label htmlFor="selectTipoCarburante">Tipo de carburante</label>
-                            <select className="w-full" name="TipoCarburante" id="selectTipoCarburante" onChange={ev => setIdTipoCarburante(ev.target.value)}>
+                            <select className="w-full" name="TipoCarburante" id="selectTipoCarburante">
                                 {
-                                    listaTipoCarburantes
-                                    .getList()
+                                    this.state.listaTipoCarburantes
                                     .map(element => <option key={element.IDProducto} value={element.IDProducto}>{element.NombreProducto}</option>)
                                 }
                             </select>
@@ -52,9 +76,9 @@ export default class App extends React.Component {
 
                     <div className="self-center">
                         <p>debug</p>
-                        <p>provincia: {idProvincia}</p>
-                        <p>municipio: {idMunicipio}</p>
-                        <p>carburante: {idTipoCarburante}</p>
+                        <p>provincia: {this.state.idProvincia}</p>
+                        <p>municipio: {this.state.idMunicipio}</p>
+                        <p>carburante: {this.state.idTipoCarburante}</p>
                     </div>
                 </div>
                 <div className="h-full flex-1">
@@ -63,7 +87,7 @@ export default class App extends React.Component {
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        <Markers municipio={idMunicipio} tipoCarburante={idTipoCarburante}/>
+                        {/* <Markers municipio={this.state.idMunicipio} tipoCarburante={this.state.idTipoCarburante}/> */}
                     </MapContainer>
                 </div>
             </main>

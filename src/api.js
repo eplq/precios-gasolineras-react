@@ -22,7 +22,7 @@ export const obtenerProvincias = callback => {
     .catch(error => console.error(error));
 };
 
-export const obtenerMunicipios = callback => {
+export const obtenerMunicipios = (idProvincia, callback) => {
     fetch(`https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/${idProvincia}`, {
         headers: {
             'Content-Type': 'application/json'
