@@ -2,16 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 
 import useList from "../hooks/useList";
+import useProvincias from "../hooks/useProvincias";
 import { capitalize } from "../utils";
-import Markers from './Markers';
 
 export default function App() {
 
     const listaTipoCarburantes = useList();
-    const listaProvincias = useList();
+    const listaProvincias = useProvincias();
     const listaMunicipios = useList();
 
-    const provinciasFetched = useRef(false);
     const tipoCarburantesFetched = useRef(false);
 
     const [idTipoCarburante, setIdTipoCarburante] = useState('1'); // Gasolina 95 E5
@@ -36,22 +35,6 @@ export default function App() {
             tipoCarburantesFetched.current = true;
         }
     };
-    
-    const obtenerProvincias = () => {
-        if (!provinciasFetched.current) {
-            fetch('https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/Provincias/', {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                referrerPolicy: 'no-referrer',
-            })
-            .then(response => response.json())
-            .then(json => listaProvincias.setList(json))
-            .catch(error => console.error(error));
-
-            provinciasFetched.current = true;
-        }
-    };
 
     const obtenerMunicipios = () => {
         if (idProvincia !== lastProvincia.current) {
@@ -68,7 +51,6 @@ export default function App() {
         }
     };
 
-    useEffect(obtenerProvincias);
     useEffect(obtenerMunicipios, [idProvincia, listaMunicipios]);
     useEffect(obtenerTipoCarburantes);
 
@@ -85,7 +67,6 @@ export default function App() {
                         <select className="w-full" name="Provincia" id="selectProvincia" onChange={ev => setIdProvincia(ev.target.value)}>
                             {
                                 listaProvincias
-                                .getList()
                                 .map(element => <option key={element.IDPovincia} value={element.IDPovincia}>{capitalize(element.Provincia.toLowerCase())}</option>)
                             }
                         </select>
@@ -121,7 +102,7 @@ export default function App() {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Markers municipio={idMunicipio} tipoCarburante={idTipoCarburante}/>
+                    {/* <Markers municipio={idMunicipio} tipoCarburante={idTipoCarburante}/> */}
                 </MapContainer>
             </div>
         </main>

@@ -6,8 +6,8 @@ export default function useList() {
     const add = newItem => setListValue(list.push(newItem));
     const empty = () => setList([]);
     const getLength = () => list.length;
-    const getList = () => [...list];
+    const getList = () => list;
     const setList = newList => setListValue(newList);
 
-    return { getList, getLength, add, empty, setList }
+    return { list, getList, getLength, add, empty, setList }
 }
