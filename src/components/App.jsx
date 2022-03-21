@@ -1,58 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 
-import useList from "../hooks/useList";
+import Markers from "./Markers";
+import useCarburantes from "../hooks/useCarburantes";
+import useGasolineras from "../hooks/useGasolineras";
+import useMunicipios from "../hooks/useMunicipios";
 import useProvincias from "../hooks/useProvincias";
 import { capitalize } from "../utils";
 
 export default function App() {
 
-    const listaTipoCarburantes = useList();
-    const listaProvincias = useProvincias();
-    const listaMunicipios = useList();
-
-    const tipoCarburantesFetched = useRef(false);
-
+    const [idMunicipio, setIdMunicipio] = useState('280'); // Abla
+    const [idProvincia, setIdProvincia] = useState('02'); // Albacete
     const [idTipoCarburante, setIdTipoCarburante] = useState('1'); // Gasolina 95 E5
 
-    const [idProvincia, setIdProvincia] = useState('02'); // Albacete
-    const lastProvincia = useRef('0');
-
-    const [idMunicipio, setIdMunicipio] = useState('280'); // Abla
-
-
-    const obtenerTipoCarburantes = () => {
-        if (!tipoCarburantesFetched.current) {
-            fetch('https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/ProductosPetroliferos/', {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                referrerPolicy: 'no-referrer',
-            })
-            .then(response => response.json())
-            .then(json => listaTipoCarburantes.setList(json))
-            .catch(error => console.error(error));
-            tipoCarburantesFetched.current = true;
-        }
-    };
-
-    const obtenerMunicipios = () => {
-        if (idProvincia !== lastProvincia.current) {
-            fetch(`https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/${idProvincia}`, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                referrerPolicy: 'no-referrer',
-            })
-            .then(response => response.json())
-            .then(json => listaMunicipios.setList(json))
-            .catch(error => console.error(error));
-            lastProvincia.current = idProvincia;
-        }
-    };
-
-    useEffect(obtenerMunicipios, [idProvincia, listaMunicipios]);
-    useEffect(obtenerTipoCarburantes);
+    const listaTipoCarburantes = useCarburantes();
+    const listaProvincias = useProvincias();
+    const listaMunicipios = useMunicipios(idProvincia);
+    const listaGasolineras = useGasolineras(idMunicipio, idTipoCarburante);
 
     return (
         <main className="flex h-screen w-screen">
@@ -60,30 +25,24 @@ export default function App() {
                 <div>
                     <h1 className="text-3xl text-center mb-2">Precios de los hidro<wbr />carburos</h1>
                     <p className="mb-4">Seleccione un municipio</p>
-                
 
                     <div className="w-full">
                         <label htmlFor="selectProvincia">Provincia</label>
                         <select className="w-full" name="Provincia" id="selectProvincia" onChange={ev => setIdProvincia(ev.target.value)}>
                             {
-                                listaProvincias
-                                .map(element => <option key={element.IDPovincia} value={element.IDPovincia}>{capitalize(element.Provincia.toLowerCase())}</option>)
+                                listaProvincias.map(element => <option key={element.IDPovincia} value={element.IDPovincia}>{capitalize(element.Provincia.toLowerCase())}</option>)
                             }
                         </select>
                         <label htmlFor="selectMunicipio">Municipio</label>
                         <select className="w-full" name="Municipio" id="selectMunicipio" onChange={ev => setIdMunicipio(ev.target.value)}>
                             {
-                                listaMunicipios
-                                .getList()
-                                .map(element => <option key={element.IDMunicipio} value={element.IDMunicipio}>{capitalize(element.Municipio.toLowerCase())}</option>)
+                                listaMunicipios.map(element => <option key={element.IDMunicipio} value={element.IDMunicipio}>{capitalize(element.Municipio.toLowerCase())}</option>)
                             }
                         </select>
                         <label htmlFor="selectTipoCarburante">Tipo de carburante</label>
                         <select className="w-full" name="TipoCarburante" id="selectTipoCarburante" onChange={ev => setIdTipoCarburante(ev.target.value)}>
                             {
-                                listaTipoCarburantes
-                                .getList()
-                                .map(element => <option key={element.IDProducto} value={element.IDProducto}>{element.NombreProducto}</option>)
+                                listaTipoCarburantes.map(element => <option key={element.IDProducto} value={element.IDProducto}>{element.NombreProducto}</option>)
                             }
                         </select>
                     </div>
@@ -102,7 +61,7 @@ export default function App() {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {/* <Markers municipio={idMunicipio} tipoCarburante={idTipoCarburante}/> */}
+                    <Markers gasolineras={listaGasolineras}/>
                 </MapContainer>
             </div>
         </main>

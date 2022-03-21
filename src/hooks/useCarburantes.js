@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-export default function useProvincias() {
+export default function useCarburantes() {
     const [list, setList] = useState([]);
 
     useEffect(() => {
-        fetch('https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/Provincias/', {
+        fetch('https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/ProductosPetroliferos/', {
             headers: {
                 'Content-Type': 'application/json'
             },

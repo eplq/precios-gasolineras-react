@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function useProvincias() {
+export default function useMunicipios(provincia) {
     const [list, setList] = useState([]);
 
     useEffect(() => {
-        fetch('https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/Provincias/', {
+        fetch(`https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/${provincia}`, {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -13,7 +13,7 @@ export default function useProvincias() {
         .then(response => response.json())
         .then(json => setList(json))
         .catch(error => console.error(error));
-    }, [setList]);
+    }, [setList, provincia]);
 
     return list;
 }
