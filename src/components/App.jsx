@@ -47,13 +47,6 @@ export default function App() {
                         </select>
                     </div>
                 </div>
-
-                <div className="self-center">
-                    <p>debug</p>
-                    <p>provincia: {idProvincia}</p>
-                    <p>municipio: {idMunicipio}</p>
-                    <p>carburante: {idTipoCarburante}</p>
-                </div>
             </div>
             <div className="h-full flex-1">
                 <MapContainer center={[40.4169, -3.7035]} zoom={8} className="z-10 h-full">
