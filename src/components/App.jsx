@@ -47,6 +47,7 @@ export default function App() {
                         </select>
                     </div>
                 </div>
+                <p className="text-center">Made with love by <a className="text-orange-500 underline hover:text-orange-300 active:text-orange-400" href="https://github.com/eplq">eplq</a></p>
             </div>
             <div className="h-full flex-1">
                 <MapContainer center={[40.4169, -3.7035]} zoom={8} className="z-10 h-full">

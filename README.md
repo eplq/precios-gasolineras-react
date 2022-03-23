@@ -7,6 +7,8 @@ El proyecto ha sido iniciado con `create-react-app`.
 
 Además se ha usado [Tailwind](https://tailwindcss.com/) y [Leaflet](https://leafletjs.com/), en concreto [React-Leaflet](https://react-leaflet.js.org/).
 
+Puede visitar una versión en producción desplegada en [Vercel](https://precio-gasolineras.vercel.app/).
+
 ## Cómo se usa
 
 Primero clone el repositorio:
