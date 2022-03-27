@@ -1,0 +1,10 @@
+{
+    "name": "Precios de los hidrocarburos",
+    "short_name": "Gasolineras",
+    "description": "Vea de manera fácil los precios de las gasolineras.",
+    "lang": "es-ES",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff"
+  }
